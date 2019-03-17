@@ -7,45 +7,46 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import pl.edu.agh.ki.mwo.model.School;
+import pl.edu.agh.ki.mwo.model.SchoolClass;
 
 public class DatabaseConnector {
-	
+
 	protected static DatabaseConnector instance = null;
-	
+
 	public static DatabaseConnector getInstance() {
 		if (instance == null) {
 			instance = new DatabaseConnector();
 		}
 		return instance;
 	}
-	
+
 	Session session;
 
 	protected DatabaseConnector() {
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
-	
+
 	public void teardown() {
 		session.close();
 		HibernateUtil.shutdown();
 		instance = null;
 	}
-	
+
 	public Iterable<School> getSchools() {
-		
+
 		String hql = "FROM School";
 		Query query = session.createQuery(hql);
 		List schools = query.list();
-		
+
 		return schools;
 	}
-	
+
 	public void addSchool(School school) {
 		Transaction transaction = session.beginTransaction();
 		session.save(school);
 		transaction.commit();
 	}
-	
+
 	public void deleteSchool(String schoolId) {
 		String hql = "FROM School S WHERE S.id=" + schoolId;
 		Query query = session.createQuery(hql);
@@ -55,6 +56,15 @@ public class DatabaseConnector {
 			session.delete(s);
 		}
 		transaction.commit();
+	}
+
+	public Iterable<SchoolClass> getSchoolClasses() {
+
+		String hql = "FROM SchoolClass";
+		Query query = session.createQuery(hql);
+		List schoolsClasses = query.list();
+
+		return schoolsClasses;
 	}
 
 }
