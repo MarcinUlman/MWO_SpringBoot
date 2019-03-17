@@ -26,14 +26,14 @@ public class SchoolClassController {
         return "schoolClassList";    
     }
     
-//    @RequestMapping(value="/AddSchool")
-//    public String displayAddSchoolForm(Model model, HttpSession session) {    	
-//    	if (session.getAttribute("userLogin") == null)
-//    		return "redirect:/Login";
-//    	
-//        return "schoolForm";    
-//    }
-//
+    @RequestMapping(value="/AddSchoolClass")
+    public String displayAddSchoolForm(Model model, HttpSession session) {    	
+    	if (session.getAttribute("userLogin") == null)
+    		return "redirect:/Login";
+    	
+        return "schoolClassForm";    
+    }
+
 //    @RequestMapping(value="/CreateSchool", method=RequestMethod.POST)
 //    public String createSchool(@RequestParam(value="schoolName", required=false) String name,
 //    		@RequestParam(value="schoolAddress", required=false) String address,
@@ -52,18 +52,18 @@ public class SchoolClassController {
 //    	return "schoolsList";
 //    }
 //    
-//    @RequestMapping(value="/DeleteSchool", method=RequestMethod.POST)
-//    public String deleteSchool(@RequestParam(value="schoolId", required=false) String schoolId,
-//    		Model model, HttpSession session) {    	
-//    	if (session.getAttribute("userLogin") == null)
-//    		return "redirect:/Login";
-//    	
-//    	DatabaseConnector.getInstance().deleteSchool(schoolId);    	
-//       	model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
-//    	model.addAttribute("message", "Szkoła została usunięta");
-//         	
-//    	return "schoolsList";
-//    }
+    @RequestMapping(value="/DeleteSchoolClass", method=RequestMethod.POST)
+    public String deleteSchoolClass(@RequestParam(value="schoolClassId", required=false) String schoolClassId,
+    		Model model, HttpSession session) {    	
+    	if (session.getAttribute("userLogin") == null)
+    		return "redirect:/Login";
+    	
+    	DatabaseConnector.getInstance().deleteSchoolClass(schoolClassId);    	
+       	model.addAttribute("schoolsClass", DatabaseConnector.getInstance().getSchoolClasses());
+    	model.addAttribute("message", "Klasa została usunięta");
+         	
+    	return "schoolClassList";
+    }
 
 
 }
