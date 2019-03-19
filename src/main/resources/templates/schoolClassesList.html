@@ -12,7 +12,7 @@
 		<br/><Br/>
 		<table border="1" cellpadding="5">
 			<tr><th>Id</th><th>Rok rozpoczecia</th><th>Obecny rok</th><th>Profil</th><th>Akcje</th></tr>
-			<tr th:each="schoolClass: ${schoolsClasses}">
+			<tr th:each="schoolClass: ${schoolClasses}">
 				<td><span th:text="${schoolClass.id}" /></td>
 				<td><span th:text="${schoolClass.startYear}" /></td>
 				<td><span th:text="${schoolClass.currentYear}" /></td>

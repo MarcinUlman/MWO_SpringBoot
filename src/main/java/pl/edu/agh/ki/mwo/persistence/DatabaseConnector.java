@@ -62,9 +62,9 @@ public class DatabaseConnector {
 
 		String hql = "FROM SchoolClass";
 		Query query = session.createQuery(hql);
-		List schoolsClasses = query.list();
+		List schoolClasses = query.list();
 
-		return schoolsClasses;
+		return schoolClasses;
 	}
 
 	public void deleteSchoolClass(String schoolClassId) {

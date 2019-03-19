@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import pl.edu.agh.ki.mwo.model.School;
 import pl.edu.agh.ki.mwo.persistence.DatabaseConnector;
 
 @Controller
@@ -21,9 +20,9 @@ public class SchoolClassController {
     	if (session.getAttribute("userLogin") == null)
     		return "redirect:/Login";
 
-    	model.addAttribute("schoolsClasses", DatabaseConnector.getInstance().getSchoolClasses());
+    	model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
     	
-        return "schoolClassList";    
+        return "schoolClassesList";    
     }
     
     @RequestMapping(value="/AddSchoolClass")
@@ -59,10 +58,10 @@ public class SchoolClassController {
     		return "redirect:/Login";
     	
     	DatabaseConnector.getInstance().deleteSchoolClass(schoolClassId);    	
-       	model.addAttribute("schoolsClass", DatabaseConnector.getInstance().getSchoolClasses());
+       	model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
     	model.addAttribute("message", "Klasa została usunięta");
          	
-    	return "schoolClassList";
+    	return "schoolClassesList";
     }
 
 
