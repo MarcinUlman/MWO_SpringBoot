@@ -77,10 +77,20 @@ public class DatabaseConnector {
 		}
 		transaction.commit();
 	}
-	
-	public void addSchoolClass(SchoolClass schoolClass) {
+
+	public void addSchoolClass(SchoolClass schoolClass, String schoolId) {
+		String hql = "FROM School S WHERE S.id=" + schoolId;
+		Query query = session.createQuery(hql);
+		List<School> results = query.list();
 		Transaction transaction = session.beginTransaction();
-		session.save(schoolClass);
+		if (results.size() == 0) {
+			session.save(schoolClass);
+		} else {
+			School school = results.get(0);
+			school.addClass(schoolClass);
+			session.save(school);
+		}
+
 		transaction.commit();
 	}
 }
