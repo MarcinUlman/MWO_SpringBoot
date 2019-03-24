@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<body>
+
+	<div layout:fragment="content">
+		<div th:include="menuFragment"></div>
+		<br /> <br />
+		<form action="/CreateStudent" method="POST">
+			<table>
+				<tr>
+					<td>Imie:</td>
+					<td><input type="text" name="name" /></td>
+				</tr>
+				<tr>
+					<td>Nazwisko:</td>
+					<td><input type="text" name="surname" /></td>
+				</tr>
+				<tr>
+					<td>PESEL:</td>
+					<td><input type="text" name="pesel" /></td>
+				</tr>
+
+				<tr>
+					<td>klasa:</td>
+					<td><select class="form-control" name="studentSchoolClass"
+						id="studentSchoolClass">
+							<option value="-1">---</option>
+							<optgroup th:each="school: ${schools}" th:label="${school.name}">
+
+								<option th:each="schoolClass: ${school.classes}"
+									th:value="${schoolClass.id}"
+									
+									th:text="${schoolClass.profile} + ', Rok rozpoczecia: ' 
+									+ ${schoolClass.startYear} + ', Obecny rok: ' + ${schoolClass.currentYear}"></option>
+
+							</optgroup>
+					</select></td>
+				</tr>
+
+			</table>
+			<br /> <BR /> <input type="submit" value="Utwórz" />
+		</form>
+	</div>
+
+</body>
+</html>

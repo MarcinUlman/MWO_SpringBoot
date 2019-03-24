@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 
 import pl.edu.agh.ki.mwo.model.School;
 import pl.edu.agh.ki.mwo.model.SchoolClass;
+import pl.edu.agh.ki.mwo.model.Student;
 
 public class DatabaseConnector {
 
@@ -91,6 +92,41 @@ public class DatabaseConnector {
 			session.save(school);
 		}
 
+		transaction.commit();
+	}
+	
+	public Iterable<Student> getStudents() {
+
+		String hql = "FROM Student";
+		Query query = session.createQuery(hql);
+		List students = query.list();
+
+		return students;
+	}
+
+	public void deleteStudent(String studentId) {
+		String hql = "FROM Student S WHERE S.id=" + studentId;
+		Query query = session.createQuery(hql);
+		List<Student> result = query.list();
+		Transaction transaction = session.beginTransaction();
+		for(Student s : result) {
+			session.delete(s);
+		}
+		transaction.commit();
+	}
+	
+	public void addStudent(Student student, String classId) {
+		String hql = "FROM SchoolClass SC WHERE SC.id=" + classId;
+		Query query = session.createQuery(hql);
+		List<SchoolClass> result = query.list();
+		Transaction transaction = session.beginTransaction();
+		if (result.size() == 0) {
+			session.save(student);
+		} else {
+			SchoolClass schoolClass = result.get(0);
+			schoolClass.addStudent(student);
+			session.save(schoolClass);
+		}
 		transaction.commit();
 	}
 }
