@@ -42,6 +42,27 @@ public class DatabaseConnector {
 		return schools;
 	}
 
+	public School getSinglrSchools(String schoolId) {
+		String hql = "FROM School S WHERE S.id=" + schoolId;
+		Query query = session.createQuery(hql);
+		List<School> schools = query.list();
+		return schools.get(0);
+	}
+
+	public void editSchool(String schoolId, String name, String address) {
+		String hql = "FROM School S WHERE S.id=" + schoolId;
+		Query query = session.createQuery(hql);
+		List<School> schools = query.list();
+
+		Transaction transaction = session.beginTransaction();
+		School school = schools.get(0);
+		school.setName(name);
+		school.setAddress(address);
+		session.save(school);
+
+		transaction.commit();
+	}
+
 	public void addSchool(School school) {
 		Transaction transaction = session.beginTransaction();
 		session.save(school);
@@ -94,7 +115,7 @@ public class DatabaseConnector {
 
 		transaction.commit();
 	}
-	
+
 	public Iterable<Student> getStudents() {
 
 		String hql = "FROM Student";
@@ -109,12 +130,12 @@ public class DatabaseConnector {
 		Query query = session.createQuery(hql);
 		List<Student> result = query.list();
 		Transaction transaction = session.beginTransaction();
-		for(Student s : result) {
+		for (Student s : result) {
 			session.delete(s);
 		}
 		transaction.commit();
 	}
-	
+
 	public void addStudent(Student student, String classId) {
 		String hql = "FROM SchoolClass SC WHERE SC.id=" + classId;
 		Query query = session.createQuery(hql);
@@ -129,4 +150,5 @@ public class DatabaseConnector {
 		}
 		transaction.commit();
 	}
+
 }

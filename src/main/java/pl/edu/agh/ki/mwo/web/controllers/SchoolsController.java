@@ -31,6 +31,33 @@ public class SchoolsController {
     	
         return "schoolForm";    
     }
+    
+    @RequestMapping(value="/EditSchool")
+    public String displayEditSchoolForm(@RequestParam(value="schoolId", required=false) String schoolId,
+    		Model model, HttpSession session) {    	
+    	if (session.getAttribute("userLogin") == null)
+    		return "redirect:/Login";
+    	
+    	  	
+       	model.addAttribute("school", DatabaseConnector.getInstance().getSinglrSchools(schoolId));
+    	
+        return "schoolEditForm";    
+    }
+    @RequestMapping(value="/ModifySchool", method=RequestMethod.POST)
+    public String modifySchool(@RequestParam(value="schoolId", required=false) String schoolId,
+    		@RequestParam(value="schoolName", required=false) String name,
+    		@RequestParam(value="schoolAddress", required=false) String address,
+    		Model model, HttpSession session) {
+    	
+    	if (session.getAttribute("userLogin") == null)
+    		return "redirect:/Login";
+    	
+    	DatabaseConnector.getInstance().editSchool(schoolId, name, address);
+    	model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+    	model.addAttribute("message", "Szkoła została zmieniona");
+    	
+    	return "schoolsList";
+    }
 
     @RequestMapping(value="/CreateSchool", method=RequestMethod.POST)
     public String createSchool(@RequestParam(value="schoolName", required=false) String name,
@@ -62,6 +89,4 @@ public class SchoolsController {
          	
     	return "schoolsList";
     }
-
-
 }
