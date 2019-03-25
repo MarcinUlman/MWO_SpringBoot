@@ -22,7 +22,7 @@
 				</tr>
 				<tr>
 					<td>szkola:</td>
-					<td><select class="form-control" name="newSchool" id="schoolClassSchool">
+					<td><select class="form-control" name="newSchoolId" id="schoolClassSchool">
 						<option value="-1">---</option>
 						<option th:each="school: ${schools}" th:value="${school.id}"
 							th:text="${school.name}+ ', ' + ${school.address}"
@@ -32,7 +32,7 @@
 			</table>
 			<br />
 			<input type="hidden" name="schoolClassId" th:value="${schoolClass.id}" />
-			<input type="hidden" name="oldSchool" th:value="${oldSchool}" />
+			<input type="hidden" name="oldSchoolId" th:value="${oldSchool}" />
 			<BR /> <input type="submit" value="Zmodyfikuj" />
 		</form>
 	</div>

@@ -45,7 +45,7 @@ public class StudentsController {
 			@RequestParam(value = "pesel", required = false) String pesel,
 
 			@RequestParam(value = "studentId", required = false) String studentId,
-			@RequestParam(value = "newSchoolClass", required = false) String newSchoolClassId,
+			@RequestParam(value = "newSchoolClassId", required = false) String newSchoolClassId,
 			@RequestParam(value = "oldSchoolClassId", required = false) String oldSchoolClassId,
 			Model model, HttpSession session) {
 

@@ -37,6 +37,8 @@ public class SchoolClassController {
 	@RequestMapping(value = "/EditSchoolClass")
 	public String displayEditSchoolForm(@RequestParam(value = "schoolClassId", required = false) String schoolClassId,
 			Model model, HttpSession session) {
+		if (session.getAttribute("userLogin") == null)
+    		return "redirect:/Login";
 
 		model.addAttribute("schoolClass", DatabaseConnector.getInstance().getSingleSchoolClass(schoolClassId));
 		model.addAttribute("oldSchool", DatabaseConnector.getInstance().getIdSchoolClass(schoolClassId));
@@ -45,20 +47,19 @@ public class SchoolClassController {
 		return "schoolClassEditForm";
 	}
 
-	@RequestMapping(value = "ModifySchoolClass", method = RequestMethod.POST)
+	@RequestMapping(value = "/ModifySchoolClass", method = RequestMethod.POST)
 	public String modifySchoolClass(
 			@RequestParam(value = "schoolClassId", required = false) String schoolClassId,
 			@RequestParam(value = "startYear", required = false) String startYear,
 			@RequestParam(value = "currentYear", required = false) String currentYear, 
 			@RequestParam(value = "profile", required = false) String profile,
-			@RequestParam(value = "newSchool", required = false) String newSchoolId,
-			@RequestParam(value = "oldSchool", required = false) String oldSchoolId,
+			@RequestParam(value = "newSchoolId", required = false) String newSchoolId,
+			@RequestParam(value = "oldSchoolId", required = false) String oldSchoolId,
 			Model model, HttpSession session) {
 		
 		if (session.getAttribute("userLogin") == null)
 			return "redirect:/Login";
-		System.out.println("olsSchool=" + oldSchoolId);
-		System.out.println("newSchool=" + newSchoolId);
+		
 		DatabaseConnector.getInstance().editSchoolClass(schoolClassId, Integer.valueOf(startYear), Integer.valueOf(currentYear), profile, oldSchoolId, newSchoolId);
 		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
 		model.addAttribute("message", "Nowa klasa została zmieniona");
@@ -90,6 +91,7 @@ public class SchoolClassController {
 	@RequestMapping(value = "/DeleteSchoolClass", method = RequestMethod.POST)
 	public String deleteSchoolClass(@RequestParam(value = "schoolClassId", required = false) String schoolClassId,
 			Model model, HttpSession session) {
+		
 		if (session.getAttribute("userLogin") == null)
 			return "redirect:/Login";
 

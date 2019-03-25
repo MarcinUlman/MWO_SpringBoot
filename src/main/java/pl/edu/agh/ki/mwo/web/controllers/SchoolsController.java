@@ -38,8 +38,7 @@ public class SchoolsController {
     	if (session.getAttribute("userLogin") == null)
     		return "redirect:/Login";
     	
-    	  	
-       	model.addAttribute("school", DatabaseConnector.getInstance().getSinglrSchools(schoolId));
+       	model.addAttribute("school", DatabaseConnector.getInstance().getSingleSchools(schoolId));
     	
         return "schoolEditForm";    
     }
