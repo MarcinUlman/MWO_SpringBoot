@@ -159,6 +159,7 @@ public class DatabaseConnector {
 		for (SchoolClass s : results) {
 			for (School school : schools) {
 				school.getClasses().remove(s);
+				session.save(school);
 			}
 			session.delete(s);
 		}
@@ -255,8 +256,12 @@ public class DatabaseConnector {
 		String hql = "FROM Student S WHERE S.id=" + studentId;
 		Query query = session.createQuery(hql);
 		List<Student> result = query.list();
+		List<SchoolClass> schoolClasses = session.createQuery("FROM SchoolClass").list();
 		Transaction transaction = session.beginTransaction();
 		for (Student s : result) {
+			for (SchoolClass schoolClass : schoolClasses) {
+				schoolClass.getStudents().remove(s);
+			}
 			session.delete(s);
 		}
 		transaction.commit();
