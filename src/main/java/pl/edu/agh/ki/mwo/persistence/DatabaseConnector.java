@@ -154,8 +154,12 @@ public class DatabaseConnector {
 		String hql = "FROM SchoolClass SC WHERE SC.id=" + schoolClassId;
 		Query query = session.createQuery(hql);
 		List<SchoolClass> results = query.list();
+		List<School> schools = session.createQuery("FROM School").list();
 		Transaction transaction = session.beginTransaction();
 		for (SchoolClass s : results) {
+			for (School school : schools) {
+				school.getClasses().remove(s);
+			}
 			session.delete(s);
 		}
 		transaction.commit();
