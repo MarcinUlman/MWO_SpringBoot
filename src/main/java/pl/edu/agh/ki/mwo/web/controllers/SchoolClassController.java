@@ -28,20 +28,50 @@ public class SchoolClassController {
 	public String displayAddSchoolForm(Model model, HttpSession session) {
 		if (session.getAttribute("userLogin") == null)
 			return "redirect:/Login";
-		
+
 		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
 
 		return "schoolClassForm";
 	}
 
-	@RequestMapping(value = "/CreateSchoolClass", method = RequestMethod.POST)
-	public String createSchoolClass	(@RequestParam(value = "startYear", required = false) String startYear,
+	@RequestMapping(value = "/EditSchoolClass")
+	public String displayEditSchoolForm(@RequestParam(value = "schoolClassId", required = false) String schoolClassId,
+			Model model, HttpSession session) {
+
+		model.addAttribute("schoolClass", DatabaseConnector.getInstance().getSingleSchoolClass(schoolClassId));
+		model.addAttribute("oldSchool", DatabaseConnector.getInstance().getIdSchoolClass(schoolClassId));
+		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+
+		return "schoolClassEditForm";
+	}
+
+	@RequestMapping(value = "ModifySchoolClass", method = RequestMethod.POST)
+	public String modifySchoolClass(
+			@RequestParam(value = "schoolClassId", required = false) String schoolClassId,
+			@RequestParam(value = "startYear", required = false) String startYear,
 			@RequestParam(value = "currentYear", required = false) String currentYear, 
 			@RequestParam(value = "profile", required = false) String profile,
-			@RequestParam(value = "schoolClassSchool", required = false) String schoolId,
-			
-			
+			@RequestParam(value = "newSchool", required = false) String newSchoolId,
+			@RequestParam(value = "oldSchool", required = false) String oldSchoolId,
 			Model model, HttpSession session) {
+		
+		if (session.getAttribute("userLogin") == null)
+			return "redirect:/Login";
+		System.out.println("olsSchool=" + oldSchoolId);
+		System.out.println("newSchool=" + newSchoolId);
+		DatabaseConnector.getInstance().editSchoolClass(schoolClassId, Integer.valueOf(startYear), Integer.valueOf(currentYear), profile, oldSchoolId, newSchoolId);
+		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
+		model.addAttribute("message", "Nowa klasa została zmieniona");
+		return "schoolClassesList";
+	}
+
+	@RequestMapping(value = "/CreateSchoolClass", method = RequestMethod.POST)
+	public String createSchoolClass(@RequestParam(value = "startYear", required = false) String startYear,
+			@RequestParam(value = "currentYear", required = false) String currentYear,
+			@RequestParam(value = "profile", required = false) String profile,
+			@RequestParam(value = "schoolClassSchool", required = false) String schoolId, Model model,
+			HttpSession session) {
+
 		if (session.getAttribute("userLogin") == null)
 			return "redirect:/Login";
 
@@ -49,8 +79,6 @@ public class SchoolClassController {
 		newClass.setStartYear(Integer.valueOf(startYear));
 		newClass.setCurrentYear(Integer.valueOf(currentYear));
 		newClass.setProfile(profile);
-		
-		
 
 		DatabaseConnector.getInstance().addSchoolClass(newClass, schoolId);
 		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());

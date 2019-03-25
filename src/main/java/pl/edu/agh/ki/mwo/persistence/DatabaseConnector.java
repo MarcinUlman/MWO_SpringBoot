@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.mwo.persistence;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -89,6 +90,62 @@ public class DatabaseConnector {
 		return schoolClasses;
 	}
 
+	public SchoolClass getSingleSchoolClass(String schoolClassId) {
+		String hql = "FROM SchoolClass SC WHERE SC.id=" + schoolClassId;
+		Query query = session.createQuery(hql);
+		List<SchoolClass> schoolClasses = query.list();
+
+		return schoolClasses.get(0);
+	}
+
+	public Long getIdSchoolClass(String schoolClassId) {
+		String hql = "FROM School";
+		Query query = session.createQuery(hql);
+		List<School> schools = query.list();
+
+		for (School school : schools) {
+			Set<SchoolClass> schoolClasses = school.getClasses();
+			for (SchoolClass schoolClass : schoolClasses) {
+				if (schoolClass.getId() == Long.valueOf(schoolClassId)) {
+					return school.getId();
+				}
+			}
+		}
+		return -1L;
+	}
+
+	public void editSchoolClass(String schoolClassId, int startYear, int currentYear, String profile,
+			String oldSchoolId, String newSchoolId) {
+		String hql = "FROM SchoolClass SC WHERE SC.id=" + schoolClassId;
+		Query query = session.createQuery(hql);
+		List<SchoolClass> schoolClasses = query.list();
+
+		Transaction transaction = session.beginTransaction();
+		SchoolClass schoolClass = schoolClasses.get(0);
+		schoolClass.setStartYear(startYear);
+		schoolClass.setCurrentYear(currentYear);
+		schoolClass.setProfile(profile);
+		session.save(schoolClass);
+		transaction.commit();
+
+		if (!oldSchoolId.equals("-1") && oldSchoolId != null) {
+			hql = "FROM School S WHERE S.id=" + oldSchoolId;
+			query = session.createQuery(hql);
+			List<School> oldSchools = query.list();
+			transaction = session.beginTransaction();
+			oldSchools.get(0).getClasses().remove(schoolClass);
+			transaction.commit();
+		}
+		if (!newSchoolId.equals("-1") && newSchoolId != null) {
+			hql = "FROM School S WHERE S.id=" + newSchoolId;
+			query = session.createQuery(hql);
+			List<School> newSchools = query.list();
+			transaction = session.beginTransaction();
+			newSchools.get(0).getClasses().add(schoolClass);
+			transaction.commit();
+		}
+	}
+
 	public void deleteSchoolClass(String schoolClassId) {
 		String hql = "FROM SchoolClass SC WHERE SC.id=" + schoolClassId;
 		Query query = session.createQuery(hql);
@@ -150,5 +207,4 @@ public class DatabaseConnector {
 		}
 		transaction.commit();
 	}
-
 }
