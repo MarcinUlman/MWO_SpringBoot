@@ -20,6 +20,7 @@ public class SchoolClassController {
 			return "redirect:/Login";
 
 		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
+		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
 
 		return "schoolClassesList";
 	}
@@ -62,6 +63,7 @@ public class SchoolClassController {
 		
 		DatabaseConnector.getInstance().editSchoolClass(schoolClassId, Integer.valueOf(startYear), Integer.valueOf(currentYear), profile, oldSchoolId, newSchoolId);
 		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
+		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
 		model.addAttribute("message", "Nowa klasa została zmieniona");
 		return "schoolClassesList";
 	}
@@ -83,6 +85,7 @@ public class SchoolClassController {
 
 		DatabaseConnector.getInstance().addSchoolClass(newClass, schoolId);
 		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
+		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
 		model.addAttribute("message", "Nowa klasa została dodana");
 
 		return "schoolClassesList";
@@ -97,6 +100,7 @@ public class SchoolClassController {
 
 		DatabaseConnector.getInstance().deleteSchoolClass(schoolClassId);
 		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
+		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
 		model.addAttribute("message", "Klasa została usunięta");
 
 		return "schoolClassesList";

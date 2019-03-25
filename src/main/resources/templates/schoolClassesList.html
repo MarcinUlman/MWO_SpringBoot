@@ -11,12 +11,16 @@
     	<div th:include="menuFragment" ></div>
 		<br/><Br/>
 		<table border="1" cellpadding="5">
-			<tr><th>Id</th><th>Rok rozpoczecia</th><th>Obecny rok</th><th>Profil</th><th>Akcje</th></tr>
+			<tr><th>Id</th><th>Rok rozpoczecia</th><th>Obecny rok</th><th>Profil</th><th>Szkoła</th><th>Akcje</th></tr>
 			<tr th:each="schoolClass: ${schoolClasses}">
 				<td><span th:text="${schoolClass.id}" /></td>
 				<td><span th:text="${schoolClass.startYear}" /></td>
 				<td><span th:text="${schoolClass.currentYear}" /></td>
 				<td><span th:text="${schoolClass.profile}" /></td>
+				<td><div th:each="school: ${schools}">
+					 	<span th:each="classInSchool: ${school.classes}"
+							th:if="${classInSchool.id == schoolClass.id}"
+							th:text="${school.name}"/></div></td>
 		        <td style="padding: 0px; ">
 		            <form action="/DeleteSchoolClass" method="POST" style="margin : 0px">
 		            	<input type="hidden" name="schoolClassId" th:value="${schoolClass.id}" />
