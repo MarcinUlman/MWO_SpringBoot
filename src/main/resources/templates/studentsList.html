@@ -20,10 +20,14 @@
 				<td><span th:text="${student.name}" /></td>
 				<td><span th:text="${student.surname}" /></td>
 				<td><span th:text="${student.pesel}" /></td>
-				<td>
-					<form action="/DeleteStudent" method="POST">
+				<td style="padding: 0px; ">
+					<form action="/DeleteStudent" method="POST" style="margin : 0px">
 						<input type="hidden" name="studentId" th:value="${student.id}" />
-						<button type="submit">X</button>
+						<button type="submit" style="width: 100%; height: 25px; margin: 0px; padding: 0px">X</button>
+					</form>
+					<form action="/EditStudent" method="POST" style="margin : 0px">
+						<input type="hidden" name="studentId" th:value="${student.id}" />
+						<button type="submit" style="width: 100%; height: 25px; margin: 0px; padding: 0px">Edit</button>
 					</form>
 				</td>
 			</tr>

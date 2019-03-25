@@ -182,6 +182,63 @@ public class DatabaseConnector {
 		return students;
 	}
 
+	public Student getSingleStudent(String studentId) {
+		String hql = "FROM Student S WHERE S.id=" + studentId;
+		Query query = session.createQuery(hql);
+		List<Student> result = query.list();
+		return result.get(0);
+	}
+
+	public Long getSchoolClassId(String stundentId) {
+		String hql = "FROM SchoolClass";
+		Query query = session.createQuery(hql);
+		List<SchoolClass> schoolClasses = query.list();
+
+		for (SchoolClass schoolClass : schoolClasses) {
+			Set<Student> students = schoolClass.getStudents();
+			for (Student student : students) {
+				if (student.getId() == Long.valueOf(stundentId)) {
+					return schoolClass.getId();
+				}
+			}
+		}
+		return -1L;
+	}
+
+	public void editStudent(String studentId, String name, String surname, String pesel, String oldSchoolClassId,
+			String newSchoolClassId) {
+
+		String hql = "FROM Student S WHERE S.id=" + studentId;
+		Query query = session.createQuery(hql);
+		List<Student> students = query.list();
+
+		Transaction transaction = session.beginTransaction();
+		Student student = students.get(0);
+		student.setName(name);
+		student.setSurname(surname);
+		student.setPesel(pesel);
+		session.save(student);
+		transaction.commit();
+
+		if (!oldSchoolClassId.equals("-1") && oldSchoolClassId != null) {
+			hql = "FROM SchoolClass SC WHERE SC.id=" + oldSchoolClassId;
+			query = session.createQuery(hql);
+			List<SchoolClass> oldSchoolClasses = query.list();
+			transaction = session.beginTransaction();
+			oldSchoolClasses.get(0).getStudents().remove(student);
+			transaction.commit();
+		}
+
+		if (!newSchoolClassId.equals("-1") && newSchoolClassId != null) {
+			hql = "FROM SchoolClass SC WHERE SC.id=" + newSchoolClassId;
+			query = session.createQuery(hql);
+			List<SchoolClass> newSchoolClasses = query.list();
+			transaction = session.beginTransaction();
+			newSchoolClasses.get(0).getStudents().add(student);
+			transaction.commit();
+		}
+	}
+
 	public void deleteStudent(String studentId) {
 		String hql = "FROM Student S WHERE S.id=" + studentId;
 		Query query = session.createQuery(hql);
