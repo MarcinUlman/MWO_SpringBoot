@@ -14,12 +14,27 @@
 				<th>Imie</th>
 				<th>Nazwisko</th>
 				<th>PESEL</th>
+				<th>Klasa</th>
+				<th>Szkoła</th>
+				<th>Akcje</th>
 			</tr>
 			<tr th:each="student: ${studentsListFromDB}">
 				<td><span th:text="${student.id}" /></td>
 				<td><span th:text="${student.name}" /></td>
 				<td><span th:text="${student.surname}" /></td>
 				<td><span th:text="${student.pesel}" /></td>
+				<td><div th:each="schoolClass: ${schoolClasses}">
+					<span th:each="studentsInSchool: ${schoolClass.students}"
+						th:if="${studentsInSchool.id == student.id}"
+						th:text="${schoolClass.profile} + ', Rok rozpoczecia: ' 
+									+ ${schoolClass.startYear} + ', Obecny rok: ' + ${schoolClass.currentYear}"/>
+				</div></td>
+				<td><div th:each="school: ${schools}">
+						<div th:each="classInSchool: ${school.classes}">
+							<span th:each="studentsInSchool: ${classInSchool.students}"
+						th:if="${studentsInSchool.id == student.id}"
+						th:text="${school.name}"/>
+				</div></div></td>
 				<td style="padding: 0px; ">
 					<form action="/DeleteStudent" method="POST" style="margin : 0px">
 						<input type="hidden" name="studentId" th:value="${student.id}" />
