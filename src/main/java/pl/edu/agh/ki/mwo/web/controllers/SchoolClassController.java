@@ -19,8 +19,7 @@ public class SchoolClassController {
 		if (session.getAttribute("userLogin") == null)
 			return "redirect:/Login";
 
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolsWhithClasses());
 
 		return "schoolClassesList";
 	}
@@ -42,7 +41,7 @@ public class SchoolClassController {
     		return "redirect:/Login";
 
 		model.addAttribute("schoolClass", DatabaseConnector.getInstance().getSingleSchoolClass(schoolClassId));
-		model.addAttribute("oldSchool", DatabaseConnector.getInstance().getIdSchoolClass(schoolClassId));
+		model.addAttribute("oldSchool", DatabaseConnector.getInstance().getSchoolId(schoolClassId));
 		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
 
 		return "schoolClassEditForm";
@@ -62,8 +61,7 @@ public class SchoolClassController {
 			return "redirect:/Login";
 		
 		DatabaseConnector.getInstance().editSchoolClass(schoolClassId, Integer.valueOf(startYear), Integer.valueOf(currentYear), profile, oldSchoolId, newSchoolId);
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolsWhithClasses());
 		model.addAttribute("message", "Nowa klasa została zmieniona");
 		return "schoolClassesList";
 	}
@@ -84,8 +82,7 @@ public class SchoolClassController {
 		newClass.setProfile(profile);
 
 		DatabaseConnector.getInstance().addSchoolClass(newClass, schoolId);
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolsWhithClasses());
 		model.addAttribute("message", "Nowa klasa została dodana");
 
 		return "schoolClassesList";
@@ -99,8 +96,7 @@ public class SchoolClassController {
 			return "redirect:/Login";
 
 		DatabaseConnector.getInstance().deleteSchoolClass(schoolClassId);
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolsWhithClasses());
 		model.addAttribute("message", "Klasa została usunięta");
 
 		return "schoolClassesList";

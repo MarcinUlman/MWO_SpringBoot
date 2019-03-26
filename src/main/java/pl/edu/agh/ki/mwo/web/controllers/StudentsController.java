@@ -19,9 +19,7 @@ public class StudentsController {
 		if (session.getAttribute("userLogin") == null)
 			return "redirect:/Login";
 
-		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudents());
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudentsWithSchoolsAndClasses());
 
 		return "studentsList";
 	}
@@ -52,10 +50,7 @@ public class StudentsController {
 			Model model, HttpSession session) {
 
 		DatabaseConnector.getInstance().editStudent(studentId, name, surname, pesel, oldSchoolClassId, newSchoolClassId);
-		
-		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudents());
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudentsWithSchoolsAndClasses());
 		model.addAttribute("message", "Uczeń został zmieniony");
 		
 		return "studentsList";
@@ -69,9 +64,7 @@ public class StudentsController {
 			return "redirect:/Login";
 
 		DatabaseConnector.getInstance().deleteStudent(studentId);
-		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudents());
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudentsWithSchoolsAndClasses());
 		model.addAttribute("message", "Uczeń został usunięty");
 
 		return "studentsList";
@@ -106,9 +99,7 @@ public class StudentsController {
 		newStudent.setPesel(pesel);
 
 		DatabaseConnector.getInstance().addStudent(newStudent, classId);
-		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudents());
-		model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
-		model.addAttribute("schools", DatabaseConnector.getInstance().getSchools());
+		model.addAttribute("studentsListFromDB", DatabaseConnector.getInstance().getStudentsWithSchoolsAndClasses());
 		model.addAttribute("message", "Uczeń został dodany");
 
 		return "studentsList";

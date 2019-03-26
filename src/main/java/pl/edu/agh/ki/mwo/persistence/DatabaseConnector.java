@@ -1,11 +1,14 @@
 package pl.edu.agh.ki.mwo.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import pl.edu.agh.ki.mwo.model.School;
 import pl.edu.agh.ki.mwo.model.SchoolClass;
@@ -98,7 +101,28 @@ public class DatabaseConnector {
 		return schoolClasses.get(0);
 	}
 
-	public Long getIdSchoolClass(String schoolClassId) {
+	public List<Pair<SchoolClass, School>> getSchoolsWhithClasses() {
+		String hql = "From School S WHERE S.classes.size > 0";
+		Query query = session.createQuery(hql);
+		Iterable<School> schools = query.list();
+
+		Iterable<SchoolClass> schoolClasses = getSchoolClasses();
+
+		List<Pair<SchoolClass, School>> listOfPairsClassAndSchool = new ArrayList<Pair<SchoolClass, School>>();
+
+		for (SchoolClass schoolClass : schoolClasses) {
+			Pair<SchoolClass, School> pair = new Pair<>(schoolClass, null);
+			for (School school : schools) {
+				if (school.getClasses().contains(schoolClass)) {
+					pair = pair.setAt1(school);
+				}
+			}
+			listOfPairsClassAndSchool.add(pair);
+		}
+		return listOfPairsClassAndSchool;
+	}
+
+	public Long getSchoolId(String schoolClassId) {
 		String hql = "FROM School";
 		Query query = session.createQuery(hql);
 		List<School> schools = query.list();
@@ -189,6 +213,32 @@ public class DatabaseConnector {
 		List students = query.list();
 
 		return students;
+	}
+
+	public Iterable<Triplet<Student, SchoolClass, School>> getStudentsWithSchoolsAndClasses() {
+		Iterable<Student> students = getStudents();
+		Iterable<SchoolClass> schoolClassesWithStudents = session
+				.createQuery("FROM SchoolClass SC WHERE SC.students.size > 0").list();
+		Iterable<School> schoolsWithClasses = session.createQuery("From School S WHERE S.classes.size > 0").list();
+
+		List<Triplet<Student, SchoolClass, School>> listOfTripletsStudentsWithSchoolsAndClasses = new ArrayList<Triplet<Student, SchoolClass, School>>();
+
+		for (Student student : students) {
+			Triplet<Student, SchoolClass, School> triplet = new Triplet<>(student, null, null);
+			for (SchoolClass schoolClass : schoolClassesWithStudents) {
+				if (schoolClass.getStudents().contains(student)) {
+					triplet = triplet.setAt1(schoolClass);
+					for (School school : schoolsWithClasses) {
+						if (school.getClasses().contains(schoolClass)) {
+							triplet = triplet.setAt2(school);
+						}
+					}
+				}
+			}
+			listOfTripletsStudentsWithSchoolsAndClasses.add(triplet);
+		}
+
+		return listOfTripletsStudentsWithSchoolsAndClasses;
 	}
 
 	public Student getSingleStudent(String studentId) {
